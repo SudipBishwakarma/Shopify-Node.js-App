@@ -1,0 +1,97 @@
+<h2>Bulk Harmonized code importer</h2>
+<p>Please upload CSV file with field names as: </p>
+<pre class="uploadSample">sku,hs_code<br>FC_145523,123314</pre>
+<form id="upload_file" class="form-inline" encType="multipart/form-data">
+  <div class="form-group">
+    <label for="fileUpload">File To Upload:</label>
+    <input name="fileUpload" type="file" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-default">Upload</button>
+</form>
+
+<div id="resMsg"></div>
+<div class="loader" id="loader" style="display:none"></div>
+<div class="resProcess" id="resProcess"></div>
+
+<script>
+  $('.navbar-header').removeClass('custom');
+  $('li').addClass('custom');
+  $( document ).ajaxStart(() => {
+    $('#resMsg').html('');
+    $('#resProcess').html('');
+    $('#loader').css('display', 'block')
+  });
+
+  $( document ).ajaxComplete(() => {
+    $('#loader').css('display', 'none')
+  });
+
+  $('#upload_file').submit(uploadFile);
+
+  function uploadFile(e) {
+    e.preventDefault();
+    $.ajax({
+      url: '/hs/upload',
+      type : 'POST',
+      data: new FormData(this),
+      processData: false,
+      contentType: false
+    })
+    .done((data) => {
+      $('#resMsg').html(`<span>${data.message}</span> 
+        <form id="process_file" class="form-inline" encType="multipart/form-data" onsubmit="processFile(event)">
+          <button type="submit" class="btn btn-default">Bulk Import</button>
+        </form>
+      `)
+    })
+    .fail((data) => {
+      $('#resMsg').html(data.responseText)
+    })
+  }
+
+  function processFile(e) {
+    e.preventDefault();
+    alert(`Please do not close the browser window while it's processing!\nMaybe grab yourself a coffee :)
+    `);
+    $.ajax({
+      url: '/hs/processFile',
+      type: 'POST'
+    })
+    .done((data) => {
+      if((data)) {
+        $('#resProcess').html(downloadContent(data))
+      }
+    })
+    .fail((data) => {
+      $('#resProcess').html(data.responseText)
+    })
+  }
+
+  function downloadContent(data) {
+    return `
+      <p>Bulk import completed successfully. Please check the table below to download process logs:</p>
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Process List</th>
+            <th>Download Logs</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Processed records (${data.processedRows}/${data.processedRows+data.skippedRows})</td>
+            <td><a href="/hs/download/${data.processed}"><i class="fa fa-download" style="font-size:36px"></i></a></td>
+          </tr>
+          <tr>
+            <td>Skipped/Not found (${data.skippedRows})</td>
+            <td>${checkSkipped(data)}</td>
+          </tr>
+        </tbody>
+      </table>
+    `
+  }
+
+  function checkSkipped(data) {
+    return data.skippedRows !== 0 ? `<a href="/hs/download/${data.notFound}"><i class="fa fa-download" style="font-size:36px"></i></a>` : ''
+  }
+</script>

@@ -1,0 +1,86 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+h2 {
+	margin-top: 0px!important;
+}
+
+.sync_pos {
+  float: right;
+}
+
+.uploadSample {
+	width: 50%;
+}
+
+a {
+  color: #00B7FF;
+}
+
+.custom {
+  color: #555;
+  background-color: #e7e7e7;
+}
+
+.navbar-brand {
+  margin-left: 0px!important;
+}
+
+.container {
+  width: 100%!important;
+}
+
+.resProcess {
+  margin-top: 10px;
+}
+
+/* ALL LOADERS */
+
+.loader{
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  position: relative;
+  margin: 20px 0 0 20%;
+}
+
+/* LOADER 1 */
+
+#loader:before, #loader:after{
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  width: 100%;
+  height: 100%;
+  border-radius: 100%;
+  border: 10px solid transparent;
+  border-top-color: #3498db;
+}
+
+#loader:before{
+  z-index: 100;
+  animation: spin 1s infinite;
+}
+
+#loader:after{
+  border: 10px solid #ccc;
+}
+
+@keyframes spin{
+  0%{
+    -webkit-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+
+  100%{
+    -webkit-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

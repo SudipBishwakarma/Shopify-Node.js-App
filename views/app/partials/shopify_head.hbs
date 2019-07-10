@@ -1,0 +1,15 @@
+<script src="https://cdn.shopify.com/s/assets/external/app.js"></script>
+<script type="text/javascript">
+	ShopifyApp.init({
+		apiKey: '{{apiKey}}',
+		shopOrigin: 'https://{{shop.shopify_domain}}',
+		forceRedirect: false
+	});
+</script>
+<script type="text/javascript">
+    ShopifyApp.ready(function(){
+        ShopifyApp.Bar.initialize({
+			title: '{{title}}'
+    	});
+	});
+</script> 

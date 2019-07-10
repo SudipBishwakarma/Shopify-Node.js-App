@@ -1,0 +1,54 @@
+<div class="container">
+	<button type="button" id="sync_products" class="btn btn-primary sync_pos" onclick="syncProducts()">Sync Products</button>
+	<p>Click 'HC Import' button from the menu bar for bulk import. You're currently logged in to store as:</p>          
+	<table class="table table-hover">
+		<thead>
+			<tr>
+			<th>_id</th>
+			<th>Store Domain</th>
+			<th>Active</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{shop._id}}</td>
+				<td>{{shop.shopify_domain}}</td>
+				<td>{{shop.isActive}}</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<script>
+	$(document).ready(checkSync());
+	setInterval(checkSync, 10000);
+	function syncProducts() {
+		$.ajax({
+			url: '/hs/sync_products',
+			type : 'GET'
+		})
+		.done((data) => {
+			$('#sync_products').removeAttr('onclick').addClass('disabled').text('Syncing Products')
+		})
+		.fail((err) => {
+			console.log(err)
+		})
+	}
+
+	function checkSync() {
+		$.ajax({
+			url: '/hs/check_sync',
+			type : 'GET'
+		})
+		.done((data) => {
+			if(data.displayAction) {
+				$('#sync_products').attr('onclick', `syncProducts()`).removeClass('disabled').text('Sync Products')
+			} else {
+				$('#sync_products').removeAttr('onclick').addClass('disabled').text('Syncing Products')
+			}
+		})
+		.fail((err) => {
+			console.log(err)
+		})
+	}
+</script>
